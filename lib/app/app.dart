@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../navigation/bottom_navbar.dart';
+import '../screens/dashboard/dashboard_screen.dart';
+import '../screens/upload/upload_resume_screen.dart';
+import '../screens/analysis/analysis_result_screen.dart';
+import '../screens/profile/profile_screen.dart';
 import 'theme.dart';
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const DashboardScreen(),
+    const UploadResumeScreen(),
+    const AnalysisResultScreen(),
+    const ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +35,20 @@ class App extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeProvider.themeMode,
-          builder: (context, child) {
-            // Apply system UI overlay styles
-            return child!;
-          },
+          home: Scaffold(
+            body: IndexedStack(
+              index: _currentIndex,
+              children: _screens,
+            ),
+            bottomNavigationBar: BottomNavbar(
+              currentIndex: _currentIndex,
+              onTap: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+            ),
+          ),
         );
       },
     );
