@@ -4,11 +4,13 @@ import '../../core/constants/app_sizes.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/utils/snackbar.dart';
 import '../../providers/upload_provider.dart';
+import '../../providers/analysis_provider.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_textfield.dart';
 import '../../widgets/upload/upload_box.dart';
 import '../../widgets/upload/file_preview.dart';
 import '../../widgets/upload/upload_progress.dart';
+import '../analysis/analysis_result_screen.dart';
 
 class UploadResumeScreen extends StatefulWidget {
   const UploadResumeScreen({super.key});
@@ -168,8 +170,8 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
     );
   }
 
-  void _startAnalysis(BuildContext context, UploadProvider provider) {
-    final text = provider.getResumeText();
+  void _startAnalysis(BuildContext context, UploadProvider uploadProvider) {
+    final text = uploadProvider.getResumeText();
     if (text.trim().isEmpty) {
       AppSnackbar.show(
         context,
@@ -179,6 +181,29 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
       return;
     }
 
-    AppSnackbar.show(context, message: 'Resume ready for analysis!');
+    final analysisProvider = Provider.of<AnalysisProvider>(context, listen: false);
+    
+    analysisProvider.analyzeResume(
+      text,
+      resumeName: uploadProvider.fileName.isNotEmpty 
+          ? uploadProvider.fileName 
+          : 'Manual Entry',
+    ).then((_) {
+      if (analysisProvider.state == AnalysisState.success && context.mounted) {
+        uploadProvider.reset();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const AnalysisResultScreen(),
+          ),
+        );
+      } else if (analysisProvider.state == AnalysisState.error && context.mounted) {
+        AppSnackbar.show(
+          context,
+          message: analysisProvider.errorMessage ?? 'Analysis failed',
+          isError: true,
+        );
+      }
+    });
   }
 }
