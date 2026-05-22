@@ -29,14 +29,14 @@ exports.analyzeResume = functions.https.onRequest(async (req, res) => {
     }
 
     // Get API key from environment variable
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      res.status(500).json({ error: "GEMINI_API_KEY environment variable is not set on the server." });
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey || apiKey === "gsk_placeholder_please_replace") {
+      res.status(500).json({ error: "GROQ_API_KEY environment variable is not set or is still set to placeholder on the server." });
       return;
     }
 
-    const model = "models/gemini-2.0-flash";
-    const url = `https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${apiKey}`;
+    const model = "llama-3.3-70b-versatile";
+    const url = "https://api.groq.com/openai/v1/chat/completions";
 
     const prompt = `Analyze this resume and provide structured feedback.
 
@@ -54,60 +54,65 @@ Return ONLY a JSON object with this exact structure:
   "summary": <string brief overview 1-2 sentences>
 }
 
-Scoring criteria:
-- Formatting and structure (25 points)
-- Keyword optimization (25 points)
-- Content quality (25 points)
-- Skills match (25 points)
+Scoring criteria and strict grading rules:
+- Formatting and structure (max 25 points): Evaluate layout consistency, readability, sections, and clear contact info.
+- Keyword optimization (max 25 points): Check for relevant industry keywords, clear job titles, and standard terminology.
+- Content quality and impact (max 25 points): Deduct points heavily if bullet points do not use the CAR (Context-Action-Result) format or lack metrics/numbers. If there are no quantifiable achievements (e.g. %, $, numbers, time saved), the maximum score for this section is 10/25.
+- Skills and tech relevance (max 25 points): Match the candidate's core technologies and tools against standard developer/professional expectations.
 
-Be honest but constructive. Focus on actionable improvements.`;
+Strictness guidelines:
+1. Do not inflate scores. An average, generic resume with standard descriptions and no metrics must score between 40 and 55.
+2. Only exceptional, industry-leading resumes with clear metrics, strong formatting, zero grammatical errors, and high impact should score above 75.
+3. If there are typos, poor structure, or lack of contact information, penalize heavily.
+4. Calculate the final 'atsScore' mathematically as the sum of these four categories (0-100 total).`;
 
-    const geminiPayload = {
-      contents: [
+    const groqPayload = {
+      messages: [
         {
-          parts: [
-            { text: prompt }
-          ]
+          role: "user",
+          content: prompt
         }
       ],
-      generationConfig: {
-        temperature: 0.2,
-        maxOutputTokens: 2048,
-        responseMimeType: "application/json",
+      model: model,
+      temperature: 0.2,
+      max_tokens: 2048,
+      response_format: {
+        type: "json_object"
       }
     };
 
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
       },
-      body: JSON.stringify(geminiPayload)
+      body: JSON.stringify(groqPayload)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       res.status(response.status).json({
-        error: `Gemini API responded with status ${response.status}`,
+        error: `Groq API responded with status ${response.status}`,
         details: errorText
       });
       return;
     }
 
     const data = await response.json();
-    if (data.candidates && data.candidates.length > 0) {
-      const contentText = data.candidates[0].content.parts[0].text;
+    if (data.choices && data.choices.length > 0) {
+      const contentText = data.choices[0].message.content;
       try {
         const parsedJson = JSON.parse(contentText);
         res.status(200).json(parsedJson);
       } catch (parseError) {
         res.status(500).json({
-          error: "Failed to parse JSON response from Gemini",
+          error: "Failed to parse JSON response from Groq",
           rawContent: contentText
         });
       }
     } else {
-      res.status(500).json({ error: "Invalid response structure from Gemini API" });
+      res.status(500).json({ error: "Invalid response structure from Groq API" });
     }
   } catch (error) {
     console.error("Error analyzing resume:", error);

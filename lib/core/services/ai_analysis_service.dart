@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-class GeminiService {
-  GeminiService._();
+class AiAnalysisService {
+  AiAnalysisService._();
 
   static final Dio _dio = Dio(
     BaseOptions(
@@ -14,16 +14,23 @@ class GeminiService {
   );
 
   static String get _baseUrl {
-    // Set to true to use local Firebase Emulator instead of production URL
-    const bool useEmulator = false;
+    // Automatically use local Firebase Emulator in debug mode
+    const bool useEmulator = kDebugMode;
+    
+    // Set this to true if you are testing on a physical Android device connected via USB.
+    // If true, you must run 'adb reverse tcp:5001 tcp:5001' in your terminal.
+    const bool usePhysicalDevice = true;
 
     if (useEmulator && kDebugMode) {
       if (kIsWeb) {
-        return 'http://localhost:5001/smart-cv-analysis/us-central1';
+        return 'http://127.0.0.1:5001/smart-cv-analysis/us-central1';
       }
-      return defaultTargetPlatform == TargetPlatform.android
-          ? 'http://10.0.2.2:5001/smart-cv-analysis/us-central1'
-          : 'http://localhost:5001/smart-cv-analysis/us-central1';
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        return usePhysicalDevice
+            ? 'http://192.168.100.168:5001/smart-cv-analysis/us-central1'
+            : 'http://10.0.2.2:5001/smart-cv-analysis/us-central1';
+      }
+      return 'http://192.168.100.168:5001/smart-cv-analysis/us-central1';
     }
     return 'https://us-central1-smart-cv-analysis.cloudfunctions.net';
   }
@@ -51,34 +58,6 @@ class GeminiService {
     } catch (e) {
       throw Exception('Analysis failed: $e');
     }
-  }
-
-  static String _buildPrompt(String resumeText) {
-    return '''
-Analyze this resume and provide structured feedback.
-
-Resume Content:
-$resumeText
-
-Return ONLY a JSON object with this exact structure:
-{
-  "atsScore": <number 0-100>,
-  "strengths": [<string array>],
-  "weaknesses": [<string array>],
-  "suggestions": [<string array>],
-  "missingSkills": [<string array>],
-  "recommendedRoles": [<string array>],
-  "summary": <string brief overview 1-2 sentences>
-}
-
-Scoring criteria:
-- Formatting and structure (25 points)
-- Keyword optimization (25 points)
-- Content quality (25 points)
-- Skills match (25 points)
-
-Be honest but constructive. Focus on actionable improvements.
-''';
   }
 
   static Future<Map<String, dynamic>> mockAnalyzeResume(

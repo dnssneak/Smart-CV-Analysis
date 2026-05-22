@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../core/services/gemini_service.dart';
+import '../core/services/ai_analysis_service.dart';
 import '../firebase/firestore_service.dart';
 import '../models/analysis_model.dart';
 
@@ -49,8 +49,8 @@ class AnalysisProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      // final result = await GeminiService.mockAnalyzeResume(resumeText);
-      final result = await GeminiService.analyzeResume(resumeText);
+      // final result = await AiAnalysisService.mockAnalyzeResume(resumeText);
+      final result = await AiAnalysisService.analyzeResume(resumeText);
 
       _currentAnalysis = AnalysisModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
