@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "170364614246",
+    "project_id": "smart-cv-analysis",
+    "storage_bucket": "smart-cv-analysis.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170364614246:android:3d8e136dc8588c92e21fa7",
+        "android_client_info": {
+          "package_name": "com.example.smart_cv_analysis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsz5xVZYQazvYxAJS1tLboWGv9d8Q3XZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

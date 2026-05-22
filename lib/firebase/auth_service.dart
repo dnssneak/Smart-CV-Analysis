@@ -51,6 +51,7 @@ class AuthService {
   }
 
   String _handleAuthError(FirebaseAuthException e) {
+    print('FirebaseAuthException [${e.code}]: ${e.message}');
     switch (e.code) {
       case 'user-not-found':
         return 'No account found with this email.';

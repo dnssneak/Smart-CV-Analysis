@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import '../core/services/pdf_service.dart';
 
 enum UploadState { idle, picking, extracting, uploading, analyzing, success, error }
@@ -7,7 +10,8 @@ enum UploadState { idle, picking, extracting, uploading, analyzing, success, err
 class UploadProvider extends ChangeNotifier {
   UploadState _state = UploadState.idle;
   String? _errorMessage;
-  File? _selectedFile;
+  File? _selectedFile; // Mobile only
+  Uint8List? _fileBytes; // Web only
   String _fileName = '';
   String _fileSize = '';
   String _extractedText = '';
@@ -16,11 +20,12 @@ class UploadProvider extends ChangeNotifier {
   UploadState get state => _state;
   String? get errorMessage => _errorMessage;
   File? get selectedFile => _selectedFile;
+  Uint8List? get fileBytes => _fileBytes;
   String get fileName => _fileName;
   String get fileSize => _fileSize;
   String get extractedText => _extractedText;
   String get manualText => _manualText;
-  bool get hasFile => _selectedFile != null;
+  bool get hasFile => _selectedFile != null || _fileBytes != null;
   bool get hasText => _extractedText.isNotEmpty || _manualText.isNotEmpty;
 
   void setManualText(String text) {
@@ -37,14 +42,6 @@ class UploadProvider extends ChangeNotifier {
       final result = await PdfService.pickFile();
       
       if (result != null) {
-        if (result.path == null) {
-          _state = UploadState.error;
-          _errorMessage = 'File path is not available on this platform';
-          notifyListeners();
-          return;
-        }
-
-        _selectedFile = File(result.path!);
         _fileName = result.name;
         _fileSize = PdfService.formatFileSize(result.size);
         
@@ -53,15 +50,46 @@ class UploadProvider extends ChangeNotifier {
 
         final extension = (result.extension ?? '').toLowerCase();
         
-        if (extension == 'pdf') {
-          _extractedText = await PdfService.extractPdfText(result.path!);
-        } else if (extension == 'docx') {
-          _extractedText = await PdfService.extractDocxText(result.path!);
+        if (kIsWeb) {
+          // Web: Use bytes directly
+          if (result.bytes == null) {
+            _state = UploadState.error;
+            _errorMessage = 'File bytes not available';
+            notifyListeners();
+            return;
+          }
+          _fileBytes = result.bytes;
+          
+          if (extension == 'pdf') {
+            _extractedText = await PdfService.extractPdfText(result.bytes);
+          } else if (extension == 'docx') {
+            _extractedText = await PdfService.extractDocxText(result.bytes);
+          } else {
+            _state = UploadState.error;
+            _errorMessage = 'Unsupported file format: $extension';
+            notifyListeners();
+            return;
+          }
         } else {
-          _state = UploadState.error;
-          _errorMessage = 'Unsupported file format: $extension';
-          notifyListeners();
-          return;
+          // Mobile: Use file path
+          if (result.path == null) {
+            _state = UploadState.error;
+            _errorMessage = 'File path not available';
+            notifyListeners();
+            return;
+          }
+          _selectedFile = File(result.path!);
+          
+          if (extension == 'pdf') {
+            _extractedText = await PdfService.extractPdfText(result.path!);
+          } else if (extension == 'docx') {
+            _extractedText = await PdfService.extractDocxText(result.path!);
+          } else {
+            _state = UploadState.error;
+            _errorMessage = 'Unsupported file format: $extension';
+            notifyListeners();
+            return;
+          }
         }
 
         _state = UploadState.idle;
@@ -78,6 +106,7 @@ class UploadProvider extends ChangeNotifier {
 
   void clearFile() {
     _selectedFile = null;
+    _fileBytes = null;
     _fileName = '';
     _fileSize = '';
     _extractedText = '';
@@ -88,6 +117,7 @@ class UploadProvider extends ChangeNotifier {
 
   void reset() {
     _selectedFile = null;
+    _fileBytes = null;
     _fileName = '';
     _fileSize = '';
     _extractedText = '';

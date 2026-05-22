@@ -49,8 +49,8 @@ class AnalysisProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      final result = await GeminiService.mockAnalyzeResume(resumeText);
-      // final result = await GeminiService.analyzeResume(resumeText);
+      // final result = await GeminiService.mockAnalyzeResume(resumeText);
+      final result = await GeminiService.analyzeResume(resumeText);
 
       _currentAnalysis = AnalysisModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -62,6 +62,7 @@ class AnalysisProvider extends ChangeNotifier {
         suggestions: List<String>.from(result['suggestions'] ?? []),
         recommendedRoles: List<String>.from(result['recommendedRoles'] ?? []),
         missingSkills: List<String>.from(result['missingSkills'] ?? []),
+        summary: result['summary'],
         createdAt: DateTime.now(),
       );
 

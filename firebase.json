@@ -1,0 +1,37 @@
+{
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firestore-debug.log"
+      ]
+    }
+  ],
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "smart-cv-analysis",
+          "appId": "1:170364614246:android:3d8e136dc8588c92e21fa7",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "smart-cv-analysis",
+          "configurations": {
+            "android": "1:170364614246:android:3d8e136dc8588c92e21fa7",
+            "ios": "1:170364614246:ios:04c9a71661178142e21fa7",
+            "macos": "1:170364614246:ios:04c9a71661178142e21fa7",
+            "web": "1:170364614246:web:79b128f3183ebf18e21fa7",
+            "windows": "1:170364614246:web:2b7db35ee21ec4a5e21fa7"
+          }
+        }
+      }
+    }
+  }
+}

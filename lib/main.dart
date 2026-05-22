@@ -6,13 +6,18 @@ import 'app/theme.dart';
 import 'providers/theme_provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/analysis_provider.dart';
+
 import 'firebase/firebase_options.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
   runApp(const MyApp());
 }
 
@@ -35,7 +40,16 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeProvider.themeMode,
-            home: const App(),
+            home: Consumer<AuthProvider>(
+              builder: (context, authProvider, _) {
+                if (authProvider.isLoading) {
+                  return const SplashScreen();
+                }
+                return authProvider.isAuthenticated
+                    ? const App()
+                    : const LoginScreen();
+              },
+            ),
           );
         },
       ),

@@ -63,6 +63,7 @@ class _SignupScreenState extends State<SignupScreen>
 
     if (success && mounted) {
       AppSnackbar.show(context, message: 'Account created successfully!');
+      Navigator.pop(context);
     } else if (mounted && authProvider.error != null) {
       AppSnackbar.show(context, message: authProvider.error!, isError: true);
     }
