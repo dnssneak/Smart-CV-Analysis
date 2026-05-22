@@ -5,6 +5,7 @@ import '../../core/constants/app_strings.dart';
 import '../../core/utils/snackbar.dart';
 import '../../providers/upload_provider.dart';
 import '../../providers/analysis_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_textfield.dart';
 import '../../widgets/upload/upload_box.dart';
@@ -60,7 +61,6 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
                       style: theme.textTheme.bodyMedium,
                     ),
                     const SizedBox(height: AppSizes.xxxl),
-
                     if (uploadProvider.state == UploadState.picking ||
                         uploadProvider.state == UploadState.extracting) ...[
                       const Center(
@@ -79,9 +79,7 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
                         onTap: () => uploadProvider.pickFile(),
                       ),
                     ],
-
                     const SizedBox(height: AppSizes.xxl),
-
                     Row(
                       children: [
                         Expanded(
@@ -96,7 +94,8 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
                           child: Text(
                             'or',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.5),
+                              color:
+                                  theme.colorScheme.onSurface.withOpacity(0.5),
                             ),
                           ),
                         ),
@@ -108,7 +107,6 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
                       ],
                     ),
                     const SizedBox(height: AppSizes.xxl),
-
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -137,7 +135,6 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
                         ],
                       ),
                     ),
-
                     if (_showManualInput) ...[
                       const SizedBox(height: AppSizes.lg),
                       CustomTextField(
@@ -148,17 +145,15 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
                         onChanged: (text) => uploadProvider.setManualText(text),
                       ),
                     ],
-
                     const SizedBox(height: AppSizes.xxxl),
-
                     CustomButton(
                       text: AppStrings.startAnalysis,
                       isLoading: uploadProvider.state == UploadState.analyzing,
-                      onPressed: uploadProvider.hasText || uploadProvider.hasFile
-                          ? () => _startAnalysis(context, uploadProvider)
-                          : null,
+                      onPressed:
+                          uploadProvider.hasText || uploadProvider.hasFile
+                              ? () => _startAnalysis(context, uploadProvider)
+                              : null,
                     ),
-
                     const SizedBox(height: AppSizes.xxl),
                   ],
                 ),
@@ -181,14 +176,28 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
       return;
     }
 
-    final analysisProvider = Provider.of<AnalysisProvider>(context, listen: false);
-    
-    analysisProvider.analyzeResume(
+    final analysisProvider =
+        Provider.of<AnalysisProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    if (authProvider.user == null) {
+      AppSnackbar.show(
+        context,
+        message: 'Please login first',
+        isError: true,
+      );
+      return;
+    }
+
+    analysisProvider
+        .analyzeResume(
       text,
-      resumeName: uploadProvider.fileName.isNotEmpty 
-          ? uploadProvider.fileName 
+      resumeName: uploadProvider.fileName.isNotEmpty
+          ? uploadProvider.fileName
           : 'Manual Entry',
-    ).then((_) {
+      userId: authProvider.user!.uid,
+    )
+        .then((_) {
       if (analysisProvider.state == AnalysisState.success && context.mounted) {
         uploadProvider.reset();
         Navigator.push(
@@ -197,7 +206,8 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
             builder: (_) => const AnalysisResultScreen(),
           ),
         );
-      } else if (analysisProvider.state == AnalysisState.error && context.mounted) {
+      } else if (analysisProvider.state == AnalysisState.error &&
+          context.mounted) {
         AppSnackbar.show(
           context,
           message: analysisProvider.errorMessage ?? 'Analysis failed',

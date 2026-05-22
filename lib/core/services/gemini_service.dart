@@ -5,7 +5,8 @@ class GeminiService {
   GeminiService._();
 
   static const String _apiKey = 'YOUR_GEMINI_API_KEY'; // Replace with your key
-  static const String _baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
+  static const String _baseUrl =
+      'https://generativelanguage.googleapis.com/v1beta';
   static const String _model = 'models/gemini-2.0-flash';
 
   static final Dio _dio = Dio(
@@ -20,7 +21,7 @@ class GeminiService {
   static Future<Map<String, dynamic>> analyzeResume(String resumeText) async {
     try {
       final prompt = _buildPrompt(resumeText);
-      
+
       final response = await _dio.post(
         '$_model:generateContent?key=$_apiKey',
         data: {
@@ -70,7 +71,7 @@ Return ONLY a JSON object with this exact structure:
   "suggestions": [<string array>],
   "missingSkills": [<string array>],
   "recommendedRoles": [<string array>],
-  "summary": <string brief overview>
+  "summary": <string brief overview 1-2 sentences>
 }
 
 Scoring criteria:
@@ -83,9 +84,10 @@ Be honest but constructive. Focus on actionable improvements.
 ''';
   }
 
-  static Future<Map<String, dynamic>> mockAnalyzeResume(String resumeText) async {
+  static Future<Map<String, dynamic>> mockAnalyzeResume(
+      String resumeText) async {
     await Future.delayed(const Duration(seconds: 2));
-    
+
     return {
       'atsScore': 78,
       'strengths': [
@@ -104,18 +106,14 @@ Be honest but constructive. Focus on actionable improvements.
         'Strengthen summary with key achievements',
         'Add more action verbs'
       ],
-      'missingSkills': [
-        'Docker',
-        'AWS',
-        'CI/CD',
-        'Unit Testing'
-      ],
+      'missingSkills': ['Docker', 'AWS', 'CI/CD', 'Unit Testing'],
       'recommendedRoles': [
         'Flutter Developer',
         'Mobile Application Developer',
         'Frontend Engineer'
       ],
-      'summary': 'Solid technical foundation with room for improvement in quantifying impact and adding modern DevOps skills.'
+      'summary':
+          'Solid technical foundation with room for improvement in quantifying impact and adding modern DevOps skills.',
     };
   }
 }

@@ -20,7 +20,6 @@ class AppTheme {
         onSecondary: AppColors.white,
         surface: AppColors.lightSurface,
         onSurface: AppColors.lightTextPrimary,
-        surfaceContainerHighest: AppColors.lightCard,
         error: AppColors.error,
         onError: AppColors.white,
         outline: AppColors.lightBorder,
@@ -63,7 +62,6 @@ class AppTheme {
         onSecondary: AppColors.white,
         surface: AppColors.darkSurface,
         onSurface: AppColors.darkTextPrimary,
-        surfaceContainerHighest: AppColors.darkCard,
         error: AppColors.error,
         onError: AppColors.white,
         outline: AppColors.darkBorder,
@@ -96,8 +94,10 @@ class AppTheme {
   // Text Theme
   static TextTheme _buildTextTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final primaryColor =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryColor =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
 
     return GoogleFonts.poppinsTextTheme().copyWith(
       displayLarge: GoogleFonts.poppins(
@@ -159,11 +159,12 @@ class AppTheme {
     return AppBarTheme(
       elevation: 0,
       centerTitle: false,
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-      systemOverlayStyle: isDark
-          ? SystemUiOverlayStyle.light
-          : SystemUiOverlayStyle.dark,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      foregroundColor:
+          isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+      systemOverlayStyle:
+          isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       titleTextStyle: GoogleFonts.poppins(
         fontSize: AppSizes.textLg,
         fontWeight: FontWeight.w600,
@@ -180,12 +181,7 @@ class AppTheme {
       color: isDark ? AppColors.darkCard : AppColors.lightCard,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.radiusMd),
-        side: BorderSide(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-          width: 1,
-        ),
       ),
-      margin: const EdgeInsets.all(0),
     );
   }
 
@@ -220,17 +216,20 @@ class AppTheme {
       ),
       hintStyle: GoogleFonts.poppins(
         fontSize: AppSizes.textSm,
-        color: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+        color:
+            isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
       ),
       labelStyle: GoogleFonts.poppins(
         fontSize: AppSizes.textSm,
-        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+        color:
+            isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
       ),
     );
   }
 
   // Elevated Button Theme
-  static ElevatedButtonThemeData _buildElevatedButtonTheme(Brightness brightness) {
+  static ElevatedButtonThemeData _buildElevatedButtonTheme(
+      Brightness brightness) {
     final isDark = brightness == Brightness.dark;
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -251,7 +250,8 @@ class AppTheme {
   }
 
   // Outlined Button Theme
-  static OutlinedButtonThemeData _buildOutlinedButtonTheme(Brightness brightness) {
+  static OutlinedButtonThemeData _buildOutlinedButtonTheme(
+      Brightness brightness) {
     final isDark = brightness == Brightness.dark;
     return OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
@@ -293,12 +293,15 @@ class AppTheme {
   }
 
   // Bottom Navigation Theme
-  static BottomNavigationBarThemeData _buildBottomNavTheme(Brightness brightness) {
+  static BottomNavigationBarThemeData _buildBottomNavTheme(
+      Brightness brightness) {
     final isDark = brightness == Brightness.dark;
     return BottomNavigationBarThemeData(
-      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkSurface : AppColors.lightBackground,
       selectedItemColor: isDark ? AppColors.skyBlue : AppColors.oceanBlue,
-      unselectedItemColor: isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
+      unselectedItemColor:
+          isDark ? AppColors.darkTextTertiary : AppColors.lightTextTertiary,
       type: BottomNavigationBarType.fixed,
       elevation: AppSizes.elevationSm,
       selectedLabelStyle: GoogleFonts.poppins(

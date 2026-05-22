@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class AnalysisModel {
   final String id;
   final String userId;
@@ -8,6 +10,7 @@ class AnalysisModel {
   final List<String> suggestions;
   final List<String> recommendedRoles;
   final List<String> missingSkills;
+  final String? summary;
   final DateTime createdAt;
 
   AnalysisModel({
@@ -20,6 +23,7 @@ class AnalysisModel {
     required this.suggestions,
     required this.recommendedRoles,
     required this.missingSkills,
+    this.summary,
     required this.createdAt,
   });
 
@@ -34,7 +38,9 @@ class AnalysisModel {
       suggestions: List<String>.from(json['suggestions'] ?? []),
       recommendedRoles: List<String>.from(json['recommendedRoles'] ?? []),
       missingSkills: List<String>.from(json['missingSkills'] ?? []),
-      createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      summary: json['summary'],
+      createdAt:
+          DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
     );
   }
 
@@ -49,6 +55,7 @@ class AnalysisModel {
       'suggestions': suggestions,
       'recommendedRoles': recommendedRoles,
       'missingSkills': missingSkills,
+      'summary': summary,
       'createdAt': createdAt.toIso8601String(),
     };
   }

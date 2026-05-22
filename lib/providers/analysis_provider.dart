@@ -1,36 +1,60 @@
 import 'package:flutter/material.dart';
 import '../core/services/gemini_service.dart';
+import '../firebase/firestore_service.dart';
 import '../models/analysis_model.dart';
 
 enum AnalysisState { idle, loading, success, error }
 
 class AnalysisProvider extends ChangeNotifier {
+  final FirestoreService _firestoreService = FirestoreService();
+
   AnalysisState _state = AnalysisState.idle;
   String? _errorMessage;
   AnalysisModel? _currentAnalysis;
   List<AnalysisModel> _analysisHistory = [];
+  bool _isLoadingHistory = false;
 
   AnalysisState get state => _state;
   String? get errorMessage => _errorMessage;
   AnalysisModel? get currentAnalysis => _currentAnalysis;
   List<AnalysisModel> get analysisHistory => _analysisHistory;
-
   bool get isLoading => _state == AnalysisState.loading;
+  bool get isLoadingHistory => _isLoadingHistory;
   bool get hasResult => _currentAnalysis != null;
 
-  Future<void> analyzeResume(String resumeText, {String resumeName = 'Resume'}) async {
+  // Load history from Firestore
+  Future<void> loadHistory(String userId) async {
+    try {
+      _isLoadingHistory = true;
+      notifyListeners();
+
+      _analysisHistory = await _firestoreService.getUserAnalyses(userId);
+      _isLoadingHistory = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoadingHistory = false;
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
+  }
+
+  // Analyze and save to Firestore
+  Future<void> analyzeResume(
+    String resumeText, {
+    String resumeName = 'Resume',
+    required String userId,
+  }) async {
     try {
       _state = AnalysisState.loading;
       _errorMessage = null;
       notifyListeners();
 
-      // Use mock for testing, switch to real API when ready
       final result = await GeminiService.mockAnalyzeResume(resumeText);
       // final result = await GeminiService.analyzeResume(resumeText);
 
       _currentAnalysis = AnalysisModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userId: 'current_user',
+        userId: userId,
         resumeName: resumeName,
         atsScore: result['atsScore'] ?? 0,
         strengths: List<String>.from(result['strengths'] ?? []),
@@ -41,11 +65,27 @@ class AnalysisProvider extends ChangeNotifier {
         createdAt: DateTime.now(),
       );
 
-      _analysisHistory.insert(0, _currentAnalysis!);
+      // Save to Firestore
+      await _firestoreService.saveAnalysis(_currentAnalysis!, userId);
+
+      // Refresh history
+      await loadHistory(userId);
+
       _state = AnalysisState.success;
       notifyListeners();
     } catch (e) {
       _state = AnalysisState.error;
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
+  }
+
+  // Delete analysis
+  Future<void> deleteAnalysis(String userId, String analysisId) async {
+    try {
+      await _firestoreService.deleteAnalysis(userId, analysisId);
+      await loadHistory(userId);
+    } catch (e) {
       _errorMessage = e.toString();
       notifyListeners();
     }
