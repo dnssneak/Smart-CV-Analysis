@@ -174,9 +174,9 @@ class AppTheme {
   }
 
   // Card Theme
-  static CardTheme _buildCardTheme(Brightness brightness) {
+  static CardThemeData _buildCardTheme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
-    return CardTheme(
+    return CardThemeData(
       elevation: AppSizes.elevationSm,
       color: isDark ? AppColors.darkCard : AppColors.lightCard,
       shape: RoundedRectangleBorder(
