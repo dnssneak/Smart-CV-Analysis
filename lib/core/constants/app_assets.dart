@@ -11,4 +11,8 @@ class AppAssets {
   static const String emptyState = 'assets/images/empty_state.png';
   static const String splashBg = 'assets/images/splash_bg.png';
   static const String welcome = 'assets/images/welcome.png';
+
+  // Lottie Animations
+  static const String loadingLottie = 'assets/lottie/scene.json';
+  static const String analysisLottie = 'assets/lottie/loading.json';
 }

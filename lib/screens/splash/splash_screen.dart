@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
@@ -12,8 +13,9 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _controller;
+  late AnimationController _lottieController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
 
@@ -24,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
+    _lottieController = AnimationController(vsync: this);
     _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
@@ -42,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void dispose() {
     _controller.dispose();
+    _lottieController.dispose();
     super.dispose();
   }
 
@@ -96,13 +100,16 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       const SizedBox(height: AppSizes.xxxl),
                       SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.5,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            AppColors.lightBlue.withOpacity(0.8),
-                          ),
+                        width: 80,
+                        height: 80,
+                        child: Lottie.asset(
+                          AppAssets.loadingLottie,
+                          controller: _lottieController,
+                          onLoaded: (composition) {
+                            _lottieController.duration = composition.duration;
+                            _lottieController.repeat(min: 228 / 940, max: 1.0);
+                          },
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ],

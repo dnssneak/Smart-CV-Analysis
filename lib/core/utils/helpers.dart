@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
+import '../constants/app_assets.dart';
 
 class Helpers {
   Helpers._();
@@ -44,9 +46,11 @@ class Helpers {
       builder: (context) => AlertDialog(
         content: Row(
           children: [
-            const CircularProgressIndicator(),
+            const _DialogLottieLoader(),
             const SizedBox(width: 16),
-            Text(message),
+            Expanded(
+              child: Text(message),
+            ),
           ],
         ),
       ),
@@ -108,5 +112,46 @@ class Helpers {
   // Generate unique ID
   static String generateId() {
     return DateTime.now().millisecondsSinceEpoch.toString();
+  }
+}
+
+class _DialogLottieLoader extends StatefulWidget {
+  const _DialogLottieLoader();
+
+  @override
+  State<_DialogLottieLoader> createState() => _DialogLottieLoaderState();
+}
+
+class _DialogLottieLoaderState extends State<_DialogLottieLoader>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _lottieController;
+
+  @override
+  void initState() {
+    super.initState();
+    _lottieController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _lottieController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 48,
+      height: 48,
+      child: Lottie.asset(
+        AppAssets.loadingLottie,
+        controller: _lottieController,
+        onLoaded: (composition) {
+          _lottieController.duration = composition.duration;
+          _lottieController.repeat(min: 228 / 940, max: 1.0);
+        },
+        fit: BoxFit.contain,
+      ),
+    );
   }
 }
