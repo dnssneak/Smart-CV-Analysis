@@ -63,6 +63,16 @@ class RecentAnalysisCard extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSizes.xs),
                   Text(
+                    'Target: ${analysis.targetJobTitle}',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: AppSizes.xs),
+                  Text(
                     DateFormat('MMM d, yyyy').format(analysis.createdAt),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withOpacity(0.6),

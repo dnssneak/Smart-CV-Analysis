@@ -22,9 +22,13 @@ exports.analyzeResume = functions.https.onRequest(async (req, res) => {
   }
 
   try {
-    const { resumeText } = req.body;
+    const { resumeText, targetJobTitle } = req.body;
     if (!resumeText) {
       res.status(400).json({ error: "Missing resumeText in request body" });
+      return;
+    }
+    if (!targetJobTitle) {
+      res.status(400).json({ error: "Missing targetJobTitle in request body" });
       return;
     }
 
@@ -38,7 +42,7 @@ exports.analyzeResume = functions.https.onRequest(async (req, res) => {
     const model = "llama-3.3-70b-versatile";
     const url = "https://api.groq.com/openai/v1/chat/completions";
 
-    const prompt = `Analyze this resume and provide structured feedback.
+    const prompt = `Analyze this resume specifically in the context of the candidate applying for the target job title: "${targetJobTitle}". Provide structured feedback.
 
 Resume Content:
 ${resumeText}
@@ -54,11 +58,11 @@ Return ONLY a JSON object with this exact structure:
   "summary": <string brief overview 1-2 sentences>
 }
 
-Scoring criteria and strict grading rules:
+Scoring criteria and strict grading rules (evaluate against the target job title: "${targetJobTitle}"):
 - Formatting and structure (max 25 points): Evaluate layout consistency, readability, sections, and clear contact info.
-- Keyword optimization (max 25 points): Check for relevant industry keywords, clear job titles, and standard terminology.
+- Keyword optimization (max 25 points): Check for relevant industry keywords for "${targetJobTitle}", clear job titles, and standard terminology.
 - Content quality and impact (max 25 points): Deduct points heavily if bullet points do not use the CAR (Context-Action-Result) format or lack metrics/numbers. If there are no quantifiable achievements (e.g. %, $, numbers, time saved), the maximum score for this section is 10/25.
-- Skills and tech relevance (max 25 points): Match the candidate's core technologies and tools against standard developer/professional expectations.
+- Skills and tech relevance (max 25 points): Match the candidate's core technologies and tools against standard professional expectations for a "${targetJobTitle}".
 
 Strictness guidelines:
 1. Do not inflate scores. An average, generic resume with standard descriptions and no metrics must score between 40 and 55.

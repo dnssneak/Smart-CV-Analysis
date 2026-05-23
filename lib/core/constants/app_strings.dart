@@ -24,6 +24,9 @@ class AppStrings {
   static const String invalidEmail = 'Please enter a valid email';
   static const String passwordTooShort = 'Password must be at least 6 characters';
   static const String passwordsDontMatch = 'Passwords do not match';
+  static const String targetJobTitle = 'Target Job Title';
+  static const String jobTitleHint = 'e.g., Software Engineer, Product Manager';
+  static const String jobTitleRequired = 'Please enter a target job title';
 
   // Dashboard
   static const String welcome = 'Welcome';

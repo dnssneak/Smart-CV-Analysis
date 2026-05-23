@@ -22,11 +22,13 @@ class UploadResumeScreen extends StatefulWidget {
 
 class _UploadResumeScreenState extends State<UploadResumeScreen> {
   final _manualTextController = TextEditingController();
+  final _jobTitleController = TextEditingController();
   bool _showManualInput = false;
 
   @override
   void dispose() {
     _manualTextController.dispose();
+    _jobTitleController.dispose();
     super.dispose();
   }
 
@@ -59,6 +61,15 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
                     Text(
                       'We accept PDF and DOCX files',
                       style: theme.textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: AppSizes.xxl),
+                    CustomTextField(
+                      label: AppStrings.targetJobTitle,
+                      hint: AppStrings.jobTitleHint,
+                      controller: _jobTitleController,
+                      onChanged: (_) {
+                        setState(() {});
+                      },
                     ),
                     const SizedBox(height: AppSizes.xxxl),
                     if (uploadProvider.state == UploadState.picking ||
@@ -150,7 +161,8 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
                       text: AppStrings.startAnalysis,
                       isLoading: uploadProvider.state == UploadState.analyzing,
                       onPressed:
-                          uploadProvider.hasText || uploadProvider.hasFile
+                          (uploadProvider.hasText || uploadProvider.hasFile) &&
+                                  _jobTitleController.text.trim().isNotEmpty
                               ? () => _startAnalysis(context, uploadProvider)
                               : null,
                     ),
@@ -176,6 +188,16 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
       return;
     }
 
+    final targetJobTitle = _jobTitleController.text.trim();
+    if (targetJobTitle.isEmpty) {
+      AppSnackbar.show(
+        context,
+        message: AppStrings.jobTitleRequired,
+        isError: true,
+      );
+      return;
+    }
+
     final analysisProvider =
         Provider.of<AnalysisProvider>(context, listen: false);
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -195,11 +217,13 @@ class _UploadResumeScreenState extends State<UploadResumeScreen> {
       resumeName: uploadProvider.fileName.isNotEmpty
           ? uploadProvider.fileName
           : 'Manual Entry',
+      targetJobTitle: targetJobTitle,
       userId: authProvider.user!.uid,
     )
         .then((_) {
       if (analysisProvider.state == AnalysisState.success && context.mounted) {
         uploadProvider.reset();
+        _jobTitleController.clear();
         Navigator.push(
           context,
           MaterialPageRoute(

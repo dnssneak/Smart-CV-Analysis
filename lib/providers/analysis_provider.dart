@@ -42,6 +42,7 @@ class AnalysisProvider extends ChangeNotifier {
   Future<void> analyzeResume(
     String resumeText, {
     String resumeName = 'Resume',
+    required String targetJobTitle,
     required String userId,
   }) async {
     try {
@@ -49,13 +50,14 @@ class AnalysisProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
-      // final result = await AiAnalysisService.mockAnalyzeResume(resumeText);
-      final result = await AiAnalysisService.analyzeResume(resumeText);
+      // final result = await AiAnalysisService.mockAnalyzeResume(resumeText, targetJobTitle);
+      final result = await AiAnalysisService.analyzeResume(resumeText, targetJobTitle);
 
       _currentAnalysis = AnalysisModel(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: userId,
         resumeName: resumeName,
+        targetJobTitle: targetJobTitle,
         atsScore: result['atsScore'] ?? 0,
         strengths: List<String>.from(result['strengths'] ?? []),
         weaknesses: List<String>.from(result['weaknesses'] ?? []),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../core/constants/app_strings.dart';
@@ -111,21 +112,13 @@ class _LoginScreenState extends State<LoginScreen>
                     children: [
                       // Logo
                       Center(
-                        child: Container(
-                          width: 64,
+                        child: Image.asset(
+                          isDark ? AppAssets.logoWhite : AppAssets.logo,
                           height: 64,
-                          decoration: BoxDecoration(
-                            gradient: AppColors.primaryGradient,
-                            borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-                          ),
-                          child: const Icon(
-                            Icons.description_outlined,
-                            size: 32,
-                            color: AppColors.white,
-                          ),
+                          fit: BoxFit.contain,
                         ),
                       ),
-                      const SizedBox(height: AppSizes.xxxl),
+                      const SizedBox(height: AppSizes.xxl),
 
                       // Title
                       Text(

@@ -4,6 +4,7 @@ class AnalysisModel {
   final String id;
   final String userId;
   final String resumeName;
+  final String targetJobTitle;
   final int atsScore;
   final List<String> strengths;
   final List<String> weaknesses;
@@ -17,6 +18,7 @@ class AnalysisModel {
     required this.id,
     required this.userId,
     required this.resumeName,
+    required this.targetJobTitle,
     required this.atsScore,
     required this.strengths,
     required this.weaknesses,
@@ -32,6 +34,7 @@ class AnalysisModel {
       id: json['id'] ?? '',
       userId: json['userId'] ?? '',
       resumeName: json['resumeName'] ?? '',
+      targetJobTitle: json['targetJobTitle'] ?? 'General',
       atsScore: json['atsScore'] ?? 0,
       strengths: List<String>.from(json['strengths'] ?? []),
       weaknesses: List<String>.from(json['weaknesses'] ?? []),
@@ -49,6 +52,7 @@ class AnalysisModel {
       'id': id,
       'userId': userId,
       'resumeName': resumeName,
+      'targetJobTitle': targetJobTitle,
       'atsScore': atsScore,
       'strengths': strengths,
       'weaknesses': weaknesses,

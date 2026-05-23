@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/constants/app_assets.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../core/constants/app_strings.dart';
@@ -59,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                )
+                  )
               : AppColors.splashGradient,
         ),
         child: Center(
@@ -73,18 +74,10 @@ class _SplashScreenState extends State<SplashScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 80,
+                      Image.asset(
+                        AppAssets.logoWhite,
                         height: 80,
-                        decoration: BoxDecoration(
-                          color: AppColors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-                        ),
-                        child: const Icon(
-                          Icons.description_outlined,
-                          size: 40,
-                          color: AppColors.white,
-                        ),
+                        fit: BoxFit.contain,
                       ),
                       const SizedBox(height: AppSizes.xxl),
                       Text(

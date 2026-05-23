@@ -35,12 +35,16 @@ class AiAnalysisService {
     return 'https://us-central1-smart-cv-analysis.cloudfunctions.net';
   }
 
-  static Future<Map<String, dynamic>> analyzeResume(String resumeText) async {
+  static Future<Map<String, dynamic>> analyzeResume(
+    String resumeText,
+    String targetJobTitle,
+  ) async {
     try {
       final response = await _dio.post(
         '$_baseUrl/analyzeResume',
         data: {
           'resumeText': resumeText,
+          'targetJobTitle': targetJobTitle,
         },
       );
 
@@ -61,7 +65,7 @@ class AiAnalysisService {
   }
 
   static Future<Map<String, dynamic>> mockAnalyzeResume(
-      String resumeText) async {
+      String resumeText, String targetJobTitle) async {
     await Future.delayed(const Duration(seconds: 2));
 
     return {

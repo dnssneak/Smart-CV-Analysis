@@ -21,8 +21,31 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _splashFinished = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _startSplashTimer();
+  }
+
+  void _startSplashTimer() {
+    Future.delayed(const Duration(milliseconds: 4000), () {
+      if (mounted) {
+        setState(() {
+          _splashFinished = true;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +65,7 @@ class MyApp extends StatelessWidget {
             themeMode: themeProvider.themeMode,
             home: Consumer<AuthProvider>(
               builder: (context, authProvider, _) {
-                if (authProvider.isLoading) {
+                if (!_splashFinished || authProvider.isLoading) {
                   return const SplashScreen();
                 }
                 return authProvider.isAuthenticated

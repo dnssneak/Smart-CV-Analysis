@@ -90,6 +90,28 @@ class AnalysisResultScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      const SizedBox(height: AppSizes.xs),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.work_outline_rounded,
+                            size: AppSizes.iconSm,
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                          const SizedBox(width: AppSizes.xs),
+                          Expanded(
+                            child: Text(
+                              'Target Role: ${analysis.targetJobTitle}',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: AppSizes.lg),
                       AtsScoreCard(score: analysis.atsScore),
                       const SizedBox(height: AppSizes.xxxl),
