@@ -7,6 +7,9 @@ import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/analysis_provider.dart';
 import '../settings/settings_screen.dart';
+import '../analysis/history_screen.dart';
+import '../../widgets/common/edit_profile_dialog.dart';
+import 'help_support_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -156,9 +159,7 @@ class ProfileScreen extends StatelessWidget {
                     icon: Icons.person_outline,
                     title: 'Edit Profile',
                     subtitle: 'Update your information',
-                    onTap: () {
-                      // TODO: Edit profile
-                    },
+                    onTap: () => EditProfileDialog.show(context),
                   ),
                   const SizedBox(height: AppSizes.md),
                   _buildMenuItem(
@@ -167,7 +168,12 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Analysis History',
                     subtitle: 'View past resume analyses',
                     onTap: () {
-                      // TODO: Navigate to history
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const HistoryScreen(),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: AppSizes.md),
@@ -193,16 +199,7 @@ class ProfileScreen extends StatelessWidget {
                       themeProvider.toggleTheme();
                     },
                   ),
-                  const SizedBox(height: AppSizes.md),
-                  _buildMenuItem(
-                    context,
-                    icon: Icons.notifications_outlined,
-                    title: AppStrings.notifications,
-                    subtitle: 'Manage notification settings',
-                    onTap: () {
-                      // TODO: Notification settings
-                    },
-                  ),
+
                   const SizedBox(height: AppSizes.md),
                   _buildMenuItem(
                     context,
@@ -210,7 +207,12 @@ class ProfileScreen extends StatelessWidget {
                     title: 'Help & Support',
                     subtitle: 'FAQs and contact',
                     onTap: () {
-                      // TODO: Help screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const HelpSupportScreen(),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: AppSizes.xxxl),

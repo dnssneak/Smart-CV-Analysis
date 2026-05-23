@@ -114,17 +114,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       analysis.id,
                     );
                   },
-                  child: RecentAnalysisCard(
-                    analysis: analysis,
-                    onTap: () {
-                      analysisProvider.setCurrentAnalysis(analysis);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const AnalysisResultScreen(),
-                        ),
-                      );
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: AppSizes.md),
+                    child: RecentAnalysisCard(
+                      analysis: analysis,
+                      onTap: () {
+                        analysisProvider.setCurrentAnalysis(analysis);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AnalysisResultScreen(),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 );
               },

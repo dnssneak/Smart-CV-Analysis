@@ -23,8 +23,11 @@ class RecommendationCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 160,
-        padding: const EdgeInsets.all(AppSizes.lg),
+        width: 170,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSizes.md,
+          vertical: AppSizes.sm,
+        ),
         margin: const EdgeInsets.only(right: AppSizes.md),
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerHighest,
@@ -35,10 +38,11 @@ class RecommendationCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 40,
-              height: 40,
+              width: 32,
+              height: 32,
               decoration: BoxDecoration(
                 color: AppColors.oceanBlue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(AppSizes.radiusSm),
@@ -46,10 +50,10 @@ class RecommendationCard extends StatelessWidget {
               child: Icon(
                 icon,
                 color: AppColors.oceanBlue,
-                size: AppSizes.iconMd,
+                size: AppSizes.iconSm,
               ),
             ),
-            const SizedBox(height: AppSizes.md),
+            const SizedBox(height: 6),
             Text(
               role,
               style: theme.textTheme.titleSmall?.copyWith(
@@ -58,7 +62,7 @@ class RecommendationCard extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: AppSizes.xs),
+            const SizedBox(height: 4),
             Text(
               description,
               style: theme.textTheme.bodySmall?.copyWith(

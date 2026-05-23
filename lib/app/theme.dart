@@ -23,6 +23,7 @@ class AppTheme {
         error: AppColors.error,
         onError: AppColors.white,
         outline: AppColors.lightBorder,
+        surfaceContainerHighest: AppColors.lightCard,
       ),
       textTheme: _buildTextTheme(Brightness.light),
       appBarTheme: _buildAppBarTheme(Brightness.light),
@@ -65,6 +66,7 @@ class AppTheme {
         error: AppColors.error,
         onError: AppColors.white,
         outline: AppColors.darkBorder,
+        surfaceContainerHighest: AppColors.darkCard,
       ),
       textTheme: _buildTextTheme(Brightness.dark),
       appBarTheme: _buildAppBarTheme(Brightness.dark),
@@ -99,7 +101,10 @@ class AppTheme {
     final secondaryColor =
         isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
 
-    return GoogleFonts.poppinsTextTheme().copyWith(
+    final baseTextTheme =
+        isDark ? ThemeData.dark().textTheme : ThemeData.light().textTheme;
+
+    return GoogleFonts.poppinsTextTheme(baseTextTheme).copyWith(
       displayLarge: GoogleFonts.poppins(
         fontSize: AppSizes.text4xl,
         fontWeight: FontWeight.bold,
@@ -112,6 +117,11 @@ class AppTheme {
         color: primaryColor,
         letterSpacing: -0.5,
       ),
+      displaySmall: GoogleFonts.poppins(
+        fontSize: AppSizes.text2xl,
+        fontWeight: FontWeight.bold,
+        color: primaryColor,
+      ),
       headlineLarge: GoogleFonts.poppins(
         fontSize: AppSizes.text2xl,
         fontWeight: FontWeight.w600,
@@ -122,6 +132,11 @@ class AppTheme {
         fontWeight: FontWeight.w600,
         color: primaryColor,
       ),
+      headlineSmall: GoogleFonts.poppins(
+        fontSize: AppSizes.textLg,
+        fontWeight: FontWeight.w600,
+        color: primaryColor,
+      ),
       titleLarge: GoogleFonts.poppins(
         fontSize: AppSizes.textLg,
         fontWeight: FontWeight.w600,
@@ -129,6 +144,11 @@ class AppTheme {
       ),
       titleMedium: GoogleFonts.poppins(
         fontSize: AppSizes.textBase,
+        fontWeight: FontWeight.w500,
+        color: primaryColor,
+      ),
+      titleSmall: GoogleFonts.poppins(
+        fontSize: AppSizes.textSm,
         fontWeight: FontWeight.w500,
         color: primaryColor,
       ),
@@ -144,10 +164,28 @@ class AppTheme {
         color: secondaryColor,
         height: 1.5,
       ),
+      bodySmall: GoogleFonts.poppins(
+        fontSize: AppSizes.textXs,
+        fontWeight: FontWeight.normal,
+        color: secondaryColor,
+        height: 1.5,
+      ),
       labelLarge: GoogleFonts.poppins(
         fontSize: AppSizes.textSm,
         fontWeight: FontWeight.w500,
         color: primaryColor,
+        letterSpacing: 0.5,
+      ),
+      labelMedium: GoogleFonts.poppins(
+        fontSize: AppSizes.textXs,
+        fontWeight: FontWeight.w500,
+        color: secondaryColor,
+        letterSpacing: 0.5,
+      ),
+      labelSmall: GoogleFonts.poppins(
+        fontSize: AppSizes.textXs,
+        fontWeight: FontWeight.w500,
+        color: secondaryColor,
         letterSpacing: 0.5,
       ),
     );

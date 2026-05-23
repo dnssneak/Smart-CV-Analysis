@@ -14,7 +14,9 @@ import '../analysis/analysis_result_screen.dart';
 import '../analysis/history_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  final VoidCallback? onProfileTap;
+
+  const DashboardScreen({super.key, this.onProfileTap});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -80,15 +82,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            // Navigate to profile
-                          },
+                          onTap: widget.onProfileTap,
                           child: Container(
                             width: 48,
                             height: 48,
                             decoration: BoxDecoration(
                               color: AppColors.oceanBlue.withOpacity(0.1),
                               shape: BoxShape.circle,
+                              border: theme.brightness == Brightness.dark
+                                  ? Border.all(
+                                      color: AppColors.white,
+                                      width: 1.5,
+                                    )
+                                  : null,
                             ),
                             child: const Icon(
                               Icons.person_outline,
@@ -150,43 +156,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         const SizedBox(height: AppSizes.lg),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildActionCard(
-                                context,
-                                icon: Icons.upload_file_rounded,
-                                label: 'Upload Resume',
-                                color: AppColors.oceanBlue,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const UploadResumeScreen(),
-                                    ),
-                                  );
-                                },
+                        IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: _buildActionCard(
+                                  context,
+                                  icon: Icons.upload_file_rounded,
+                                  label: 'Upload Resume',
+                                  color: AppColors.oceanBlue,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            const UploadResumeScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: AppSizes.lg),
-                            Expanded(
-                              child: _buildActionCard(
-                                context,
-                                icon: Icons.history_rounded,
-                                label: 'View History',
-                                color: AppColors.softBlue,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const HistoryScreen(),
-                                    ),
-                                  );
-                                },
+                              const SizedBox(width: AppSizes.lg),
+                              Expanded(
+                                child: _buildActionCard(
+                                  context,
+                                  icon: Icons.history_rounded,
+                                  label: 'View History',
+                                  color: AppColors.softBlue,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const HistoryScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -303,12 +312,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 SliverToBoxAdapter(
                   child: SizedBox(
-                    height: 140,
+                    height: 165,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(
                         horizontal: AppSizes.xxl,
-                        vertical: AppSizes.lg,
+                        vertical: AppSizes.sm,
                       ),
                       children: const [
                         RecommendationCard(
@@ -363,6 +372,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               width: 48,
@@ -383,6 +394,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               style: theme.textTheme.labelLarge?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

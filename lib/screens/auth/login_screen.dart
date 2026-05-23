@@ -163,7 +163,8 @@ class _LoginScreenState extends State<LoginScreen>
                                       ? Icons.visibility_off_outlined
                                       : Icons.visibility_outlined,
                                   size: AppSizes.iconMd,
-                                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.5),
                                 ),
                                 onPressed: () {
                                   setState(() {
@@ -182,7 +183,8 @@ class _LoginScreenState extends State<LoginScreen>
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => const ForgotPasswordScreen(),
+                                      builder: (_) =>
+                                          const ForgotPasswordScreen(),
                                     ),
                                   );
                                 },
@@ -226,7 +228,8 @@ class _LoginScreenState extends State<LoginScreen>
                             child: Text(
                               'or',
                               style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurface.withOpacity(0.5),
+                                color: theme.colorScheme.onSurface
+                                    .withOpacity(0.5),
                               ),
                             ),
                           ),

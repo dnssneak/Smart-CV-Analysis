@@ -16,7 +16,9 @@ class AppSnackbar {
         content: Text(
           message,
           style: TextStyle(
-            color: isError ? AppColors.white : AppColors.lightTextPrimary,
+            color: isError
+                ? AppColors.white
+                : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
             fontWeight: FontWeight.w500,
           ),
         ),

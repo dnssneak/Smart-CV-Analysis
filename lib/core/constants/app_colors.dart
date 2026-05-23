@@ -14,8 +14,8 @@ class AppColors {
 
   // Light Mode
   static const Color lightBackground = white;
-  static const Color lightSurface = Color(0xFFF8FAFB);
-  static const Color lightCard = white;
+  static const Color lightSurface = Color(0xFFEEF2F6);
+  static const Color lightCard = Color(0xFFF1F3F5);
   static const Color lightBorder = Color(0xFFE8EDF2);
   static const Color lightTextPrimary = black;
   static const Color lightTextSecondary = Color(0xFF6B7280);

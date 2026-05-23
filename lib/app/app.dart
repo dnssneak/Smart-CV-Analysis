@@ -17,13 +17,24 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   int _currentIndex = 0;
+  late final List<Widget> _screens;
 
-  final List<Widget> _screens = [
-    const DashboardScreen(),
-    const UploadResumeScreen(),
-    const AnalysisResultScreen(),
-    const ProfileScreen(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      DashboardScreen(
+        onProfileTap: () {
+          setState(() {
+            _currentIndex = 3;
+          });
+        },
+      ),
+      const UploadResumeScreen(),
+      const AnalysisResultScreen(),
+      const ProfileScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,11 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
 import '../../core/constants/app_strings.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/notification_provider.dart';
 import '../../widgets/common/custom_appbar.dart';
+import '../../widgets/common/edit_profile_dialog.dart';
+import '../../widgets/common/change_password_dialog.dart';
+import 'privacy_policy_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -51,18 +55,27 @@ class SettingsScreen extends StatelessWidget {
               const SizedBox(height: AppSizes.md),
 
               // Notifications
-              _buildSettingTile(
-                context,
-                icon: Icons.notifications_outlined,
-                title: AppStrings.notifications,
-                subtitle: 'Receive analysis completion alerts',
-                trailing: Switch(
-                  value: true,
-                  onChanged: (value) {
-                    // TODO: Toggle notifications
-                  },
-                  activeColor: AppColors.oceanBlue,
-                ),
+              Consumer<NotificationProvider>(
+                builder: (context, notificationProvider, child) {
+                  return _buildSettingTile(
+                    context,
+                    icon: Icons.notifications_outlined,
+                    title: AppStrings.notifications,
+                    subtitle: 'Receive analysis completion alerts',
+                    trailing: Switch(
+                      value: notificationProvider.notificationsEnabled,
+                      onChanged: (value) {
+                        notificationProvider.toggleNotifications(value);
+                      },
+                      activeColor: AppColors.oceanBlue,
+                    ),
+                    onTap: () {
+                      notificationProvider.toggleNotifications(
+                        !notificationProvider.notificationsEnabled,
+                      );
+                    },
+                  );
+                },
               ),
               const SizedBox(height: AppSizes.xxxl),
 
@@ -79,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.person_outline,
                 title: 'Edit Profile',
                 subtitle: 'Update name and email',
-                onTap: () {},
+                onTap: () => EditProfileDialog.show(context),
               ),
               const SizedBox(height: AppSizes.md),
 
@@ -88,7 +101,7 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.lock_outline,
                 title: 'Change Password',
                 subtitle: 'Update your password',
-                onTap: () {},
+                onTap: () => ChangePasswordDialog.show(context),
               ),
               const SizedBox(height: AppSizes.xxxl),
 
@@ -114,7 +127,14 @@ class SettingsScreen extends StatelessWidget {
                 icon: Icons.policy_outlined,
                 title: 'Privacy Policy',
                 subtitle: 'Read our privacy terms',
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const PrivacyPolicyScreen(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: AppSizes.xxxl),
             ],
