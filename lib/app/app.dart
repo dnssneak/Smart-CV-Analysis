@@ -47,6 +47,7 @@ class _AppState extends State<App> {
           darkTheme: AppTheme.darkTheme,
           themeMode: themeProvider.themeMode,
           home: Scaffold(
+            extendBody: true,
             body: IndexedStack(
               index: _currentIndex,
               children: _screens,
